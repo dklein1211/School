@@ -19,7 +19,18 @@ namespace LINQhomework01
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            BirdsDataClassDataContext myDataContext = new BirdsDataClassDataContext();
 
+            var birdCountData =
+                from countBirds in myDataContext.BirdCounts
+                join nameBirds in myDataContext.Birds
+                on countBirds.BirdID
+                equals nameBirds.BirdID
+                where countBirds.BirdID > 0
+                orderby countBirds.CountDate ascending
+                select new { countBirds.BirdID, nameBirds.Name, countBirds.Count, countBirds.CountDate };     
+
+            dataGridViewBirdCount.DataSource = birdCountData;
         }
     }
 }
