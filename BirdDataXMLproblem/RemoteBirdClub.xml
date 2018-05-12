@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<XMLdataSet xmlns="http://tempuri.org/XMLdataSet.xsd">
+  <BirdCount>
+    <CountID>1</CountID>
+    <RegionID>2</RegionID>
+    <BirderID>2</BirderID>
+    <BirdID>1</BirdID>
+    <CountDate>2018-04-11T00:00:00-07:00</CountDate>
+    <Count>55</Count>
+  </BirdCount>
+  <BirdCount>
+    <CountID>2</CountID>
+    <RegionID>1</RegionID>
+    <BirderID>1</BirderID>
+    <BirdID>1</BirdID>
+    <CountDate>2018-04-09T00:00:00-07:00</CountDate>
+    <Count>77</Count>
+  </BirdCount>
+
+ </XMLdataSet>
