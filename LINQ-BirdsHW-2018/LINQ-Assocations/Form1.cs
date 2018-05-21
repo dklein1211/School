@@ -63,20 +63,26 @@ namespace LINQ_Assocations
 
             if (decimal.TryParse(textBoxNewCount.Text, out counted))
             {
-                //Get selected row(can click anywhere in the row)
-                var selected = dataGridViewBirds.CurrentRow;
-                decimal priceUpdate = (decimal)selected.Cells["UnitPrice"].Value;
+                if (counted > 40)
+                {
+                    //Get selected row(can click anywhere in the row)
+                    var selected = dataGridViewBirds.CurrentRow;
+                    int productID = (int)selected.Cells["ProductID"].Value;
 
-                //Get row from dataContext
-                var selectedUnitPrice =
-                    (from item in myData.Products
-                     where item.UnitPrice == priceUpdate
-                     select item).Single();
+                    //Get row from dataContext
+                    var selectedUnitPrice =
+                        (from item in myData.Products
+                         where item.ProductID == productID
+                         select item).Single();
 
-                selectedUnitPrice.UnitPrice = counted;   //Edit dataContext
-                myData.SubmitChanges();            //Submit Changes
-                refreshDataGridView();                 //Refresh the display
-
+                    selectedUnitPrice.UnitPrice = counted;   //Edit dataContext
+                    myData.SubmitChanges();            //Submit Changes
+                    refreshDataGridView();                 //Refresh the display
+                }
+                else
+                {
+                    MessageBox.Show("Updated prices must be above 40 please try again");
+                }
             }
             else
             {
