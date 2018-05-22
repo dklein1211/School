@@ -72,8 +72,8 @@ namespace LINQ_Assocations
                     //Get row from dataContext
                     var selectedUnitPrice =
                         (from item in myData.Products
-                         where item.ProductID == productID
-                         select item).Single();
+                         where item.ProductID == productID //Use the ID to match.
+                         select item).Single(); //Must use unique value.
 
                     selectedUnitPrice.UnitPrice = counted;   //Edit dataContext
                     myData.SubmitChanges();            //Submit Changes
