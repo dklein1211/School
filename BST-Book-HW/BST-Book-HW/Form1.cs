@@ -28,18 +28,21 @@ namespace BST_Book_HW
         {
             int rating;
             int isbn;
+            int year;
 
             if(textBoxISBN.Text != "") //Catches blank entires that would override the default name.
             {
                 int.TryParse(textBoxISBN.Text, out isbn);
                 int.TryParse(textBoxRating.Text, out rating);
-                myBST.Add(isbn, new Book(textBoxTitle.Text, textBoxAuthor.Text, rating));
+                int.TryParse(textBoxYear.Text, out year);
+                myBST.Add(isbn, new Book(textBoxTitle.Text, textBoxAuthor.Text, rating, year));
             }
 
             textBoxTitle.Clear();
             textBoxAuthor.Clear();
             textBoxISBN.Clear();
             textBoxRating.Clear();
+            textBoxYear.Clear();
         }
 
         private void buttonFind_Click(object sender, EventArgs e)
@@ -53,6 +56,15 @@ namespace BST_Book_HW
             textBoxTitle.Text = results.title;
             textBoxAuthor.Text = results.author;
             textBoxRating.Text = Convert.ToString(results.rating);
+        }
+
+        private void buttonRemove_Click(object sender, EventArgs e)
+        {
+            int isbn;
+            int.TryParse(textBoxISBN.Text, out isbn);
+
+            myBST.Remove(isbn);
+            textBoxISBN.Clear();
         }
     }
 }
