@@ -14,6 +14,8 @@ namespace BST_Book_HW
     {
         BSTclass myBST = new BSTclass();
 
+        private BindingSource bindingSource1 = new BindingSource();
+
         public Form1()
         {
             InitializeComponent();
@@ -30,7 +32,7 @@ namespace BST_Book_HW
             int isbn;
             int year;
 
-            if(textBoxISBN.Text != "") //Catches blank entires that would override the default name.
+            if (textBoxISBN.Text != "") //Catches blank entires that would override the default name.
             {
                 int.TryParse(textBoxISBN.Text, out isbn);
                 int.TryParse(textBoxRating.Text, out rating);
@@ -64,7 +66,30 @@ namespace BST_Book_HW
             int.TryParse(textBoxISBN.Text, out isbn);
 
             myBST.Remove(isbn);
+
+            textBoxTitle.Clear();
+            textBoxAuthor.Clear();
             textBoxISBN.Clear();
+            textBoxRating.Clear();
+            textBoxYear.Clear();
+        }
+
+        private void buttonGetAll_Click(object sender, EventArgs e)
+        {
+            List<ISBNclass> data = myBST.GetISBN();
+
+            dataGridView1.DataSource = data;
+
+            //Here is my solution before I found out the internal value was the issue.
+            //var dataTable = new DataTable("ISBNs");
+            //dataTable.Columns.Add("ISBN");
+            //foreach (var item in data)
+            //{
+            //    dataTable.Rows.Add(item.ISBN);            
+            //}
+             
+            //bindingSource1.DataSource = dataTable;
+            //dataGridView1.DataSource = bindingSource1;
         }
     }
 }

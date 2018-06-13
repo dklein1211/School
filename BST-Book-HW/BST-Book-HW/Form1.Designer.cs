@@ -40,9 +40,10 @@
             this.buttonFind = new System.Windows.Forms.Button();
             this.textBoxYear = new System.Windows.Forms.TextBox();
             this.labelYear = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.buttonGetAll = new System.Windows.Forms.Button();
             this.buttonRemove = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -145,22 +146,15 @@
             this.labelYear.TabIndex = 11;
             this.labelYear.Text = "Book Year";
             // 
-            // listView1
-            // 
-            this.listView1.Location = new System.Drawing.Point(336, 24);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(149, 240);
-            this.listView1.TabIndex = 12;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
             // buttonGetAll
             // 
-            this.buttonGetAll.Location = new System.Drawing.Point(352, 270);
+            this.buttonGetAll.Location = new System.Drawing.Point(344, 270);
             this.buttonGetAll.Name = "buttonGetAll";
             this.buttonGetAll.Size = new System.Drawing.Size(108, 23);
             this.buttonGetAll.TabIndex = 13;
             this.buttonGetAll.Text = "Get All ISBNs";
             this.buttonGetAll.UseVisualStyleBackColor = true;
+            this.buttonGetAll.Click += new System.EventHandler(this.buttonGetAll_Click);
             // 
             // buttonRemove
             // 
@@ -172,15 +166,23 @@
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(324, 24);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(155, 240);
+            this.dataGridView1.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(502, 301);
+            this.ClientSize = new System.Drawing.Size(494, 301);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.buttonRemove);
             this.Controls.Add(this.buttonGetAll);
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.labelYear);
             this.Controls.Add(this.textBoxYear);
             this.Controls.Add(this.buttonFind);
@@ -196,6 +198,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -215,9 +218,9 @@
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.TextBox textBoxYear;
         private System.Windows.Forms.Label labelYear;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Button buttonGetAll;
         private System.Windows.Forms.Button buttonRemove;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

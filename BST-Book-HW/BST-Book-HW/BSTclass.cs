@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace BST_Book_HW
     class BSTclass
     {
         BSTnode bstTop;  // our refernece node at the top of the BST
-
+        
         class BSTnode  // private (by default) class used by BST
         {
             public int bstKey;
@@ -173,8 +174,7 @@ namespace BST_Book_HW
                 //  node has 2 children
                 //********************************************************************************************
 
-                BSTnode NodeWithKeyValueToOverWrite = parentNode; // save a pointer to the node to be removed by overwriting
-                Book tempBook = parentNode.BookValue; //Empty book
+                BSTnode NodeWithKeyValueToOverWrite = parentNode; // save a pointer to the node to be removed by overwriting               
 
                 // walk left then rigth to find largest key on the left side of the BST
                 // move left  first
@@ -211,7 +211,8 @@ namespace BST_Book_HW
                     // before we leave, we want to overwrite the NodeWithKeyValueToOverWrite's keyValue (the one we are logically removing)
                     //  with the keyValue of this childNode's keyValue. 
                     NodeWithKeyValueToOverWrite.bstKey = childNode.bstKey;// (in this top section, the NodeWithKeyValueToOverWrite is really the top node
-                    tempBook = childNode.BookValue;                                                      // but the algorithm works here, and then below in the second section where it won't be the top node we are overwriting.
+                    NodeWithKeyValueToOverWrite.BookValue = childNode.BookValue;
+                    
                 }
                 //*********************************************************************************
                 else  // if hit this else, it means the node to remove DOES have a valid left pointer (but it cannot have a rigth pointer, else we wouldn't be here)
@@ -228,12 +229,218 @@ namespace BST_Book_HW
                     // before we leave, we want to overwrite the NodeWithKeyValueToOverWrite's keyValue (the one we thought we
                     // wanted to remove) with the keyValue of this "1 to the left, all the way to the right" node's keyValue.
                     NodeWithKeyValueToOverWrite.bstKey = childNode.bstKey;
-                    tempBook = childNode.BookValue;
+                    NodeWithKeyValueToOverWrite.BookValue = childNode.BookValue;
                 }
                 return;  // we have removed the node
 
-
             }
+            //********************************************************************************************
+            // end of case where we were removing the top node
+            //********************************************************************************************
+
+            //********************************************************************************************
+            //********************************************************************************************
+            //********************************************************************************************
+
+
+            //********************************************************************************************
+            // Now enter the cases where we are removing some node OTHER than the top.
+            // code is almost the same as removing the top node, but first we must walk the tree to find 
+            // the node to remove, so we might have TWO walk processes
+            // first we have to walk the tree to find the node to "remove" (overwrite) 
+            // and then if that node has 2 children, we will have to walk the tree the res tof the way down
+            // to find the node to "promote" to the top
+            //********************************************************************************************
+
+            //**********************************
+            // find the node to remove
+            //*********************************
+            while (true) // loop as we walk down the tree and find the node, (or not)
+            {
+                // as we come in, we know the parentNode is not the one we want to remove
+                if (keyParam < parentNode.bstKey) // if key less than, then we go left
+                {
+                    // need to throw exception if there is no left node, means value does not exist in BST
+                    if (parentNode.LeftNode == null)
+                    {
+                        throw new ApplicationException("No node with that value in the tree.");
+                    }
+                    childNode = parentNode.LeftNode;
+                    CameFromParentsLeftPointer = true;
+                }
+                else // keyParam is greater, so we want to walk to ther rigth to find the node.
+                {
+                    // need to throw exception if there is no right node, means value does not exist in BST
+                    if (parentNode.RightNode == null)
+                    {
+                        throw new ApplicationException("No node with that value in the tree.");
+                    }
+                    childNode = parentNode.RightNode;
+                    CameFromParentsLeftPointer = false;
+                }
+
+                //*********************************************************************************************
+                if (keyParam == childNode.bstKey) // if the current node has the correct value
+                                                  // begin giant section where we have found that the childnode key is a match, so we want to remove the
+                                                  // child node.  Again, there are the 3 cases, the child has 0, 1, or 2 children.
+                {
+                    //********************************************************************************************
+                    //  node has no children
+                    //********************************************************************************************
+                    if (childNode.LeftNode == null && childNode.RightNode == null) // true if no children
+                    {
+                        if (CameFromParentsLeftPointer)
+                        {
+                            parentNode.LeftNode = null; // snip off from the parent's left side and its gone
+                        }
+                        else  // must have CameFromParents Right Pointer
+                        {
+                            parentNode.RightNode = null; // snip off from the parent's right side and its gone
+                        }
+
+                        return; // and then leave
+                    }
+                    //********************************************************************************************
+                    //  node has only 1 child
+                    //********************************************************************************************
+                    // we know the child node has either one or two childer 
+                    if (childNode.LeftNode != null && childNode.RightNode == null) // child has only a left node
+                    {
+                        if (CameFromParentsLeftPointer)
+                        {
+                            parentNode.LeftNode = childNode.LeftNode; // put the child's one child node up into the parents pointer
+                        }
+                        else  // must have CameFromParents Right Pointer
+                        {
+                            parentNode.RightNode = childNode.LeftNode; ;
+                        }
+                        return; // and then leave
+                    }
+                    if (childNode.RightNode != null && childNode.LeftNode == null) // child has only a right node
+                    {
+                        if (CameFromParentsLeftPointer)
+                        {
+                            parentNode.LeftNode = childNode.RightNode; // put the child's one child node up into the parents left pointer
+                        }
+                        else  // must have CameFromParents Right Pointer
+                        {
+                            parentNode.RightNode = childNode.RightNode; // put the child's one child node up into the parents right pointer
+                        }
+                        return; // and then leave
+                    }
+
+
+                    //********************************************************************************************
+                    //  If we got here, the node to overwrite has 2 children, so we have to finsih the walk to find the highest value to copy here
+                    //********************************************************************************************
+
+                    BSTnode NodeWithKeyValueToOverWrite = childNode; // save a pointer to this node we found that we will remove (replace)
+                    parentNode = childNode; //  move the parent pointer down to this node we want to overwrite its value with
+                                            // and then start the walk first one time to the left, then rigth right right
+                    childNode = parentNode.LeftNode;
+                    CameFromParentsLeftPointer = true;  // need to remember which parent pointer got us here, first time it is the left one
+                    while (childNode.RightNode != null) // if we don't enter this while, means it was that first left node we will "promote"
+                    {
+                        parentNode = childNode;  // otherwise, we start the loop of rigth rigth right
+                        childNode = parentNode.RightNode;
+                        CameFromParentsLeftPointer = false; // remember we got her from a parents rigth pointer
+                    }
+                    // when we get here, we reach the highest value node, at the end of the rigth chain (or it might have been the lonely 1st left node).
+
+                    // we will have 2 possibiliiteis, this node to promite had 0 children, or it has one left node (it cannot have a rigth!)
+
+                    // first see if this node to remove has no children
+                    if (childNode.LeftNode == null) // are there no children?
+                    {
+                        // yep, there are no children
+                        if (CameFromParentsLeftPointer) // this is that one case where it was the first node on left we want to get ride of
+                        {
+                            parentNode.LeftNode = null; // snip off from the parent's left side and its gone
+                        }
+                        else // we walked the right pointers, so 
+                        {
+                            parentNode.RightNode = null; // snip off from the parent's right side and its gone
+                        }
+
+                        // after removing this bottom of the chain node, we "re-instate it" by copying its value back up to the node
+                        // we wanted to "remove", by overwriting the NodeWithKeyValueToOverWrite's keyValue 
+                        // with the keyValue of this "1 to the left, all the way to the right" node's keyValue.
+                        NodeWithKeyValueToOverWrite.bstKey = childNode.bstKey;
+                        NodeWithKeyValueToOverWrite.BookValue = childNode.BookValue;
+                    }
+                    else  // if hit this else, it means the node to remove has a valid left pointer
+                    {
+                        if (CameFromParentsLeftPointer) // this is that one case where it was the first node on left we want to get ride of
+                        {
+                            parentNode.LeftNode = childNode.LeftNode; // clone the childs left branch onto the parent's pointer, leaving the child an orphan
+                        }
+                        else // we had turned and had been moving down the chain of rigth pointers
+                        {
+                            parentNode.RightNode = childNode.LeftNode; // clone the childs left branch onto the parent's pointer, leaving the child an orphan
+                        }
+
+                        // after removing this bottom of the chain node, we "re-instate it" by copying its value back up to the node
+                        // we wanted to "remove", by overwriting the NodeWithKeyValueToOverWrite's keyValue 
+                        // with the keyValue of this "1 to the left, all the way to the right" node's keyValue.
+                        NodeWithKeyValueToOverWrite.bstKey = childNode.bstKey;
+                        NodeWithKeyValueToOverWrite.BookValue = childNode.BookValue;
+                    }
+
+                    return;
+
+                }  // end of if we found the node
+                else   // since we did not find the node with the key value, walk down a node
+                {
+                    parentNode = childNode; // move the pointer down to the childnode, and do the while loop again
+                                            // if the childNode is a null, our existing code above will detect and throw exception
+                }
+            }  // End of While loop -------
+        }
+
+        public List<ISBNclass> GetISBN()
+        {
+            ISBNclass currentISBN = new ISBNclass();
+            List<ISBNclass> isbnList = new List<ISBNclass>();
+
+            BSTnode currentBSTnode;  // walk the tree by using this pointer to the current node
+            Stack myStack = new Stack();  // instantiate the .NET supplied stack class, which will hold objects
+            if (bstTop == null) // if the stack is empty ...
+            {
+                return null; // nothing to print
+            }
+            else// adjust our pointer to the top node in the BST
+            {
+                currentBSTnode = bstTop;
+            }
+
+            bool done = false;  // get out of our while loop when this is set to true
+
+            while (!done)  // loop until we are done
+            {
+                if(currentBSTnode != null)
+                {
+                    isbnList.Add(new ISBNclass(currentBSTnode.bstKey));
+                }
+
+                if(currentBSTnode == null)// if there is no node here
+                {
+                    if (myStack.Count == 0)  // and the stack is empty, we have walked the entire tree, so done
+                    {
+                        done = true;
+                    }
+                    else// otherwise go back up the tree one level, by doing a pop    
+                    {
+                        currentBSTnode = (BSTnode)myStack.Pop();  // (need to cast object back to a BSTnode)
+                        currentBSTnode = currentBSTnode.RightNode;  // now go down the right side
+                    }
+                }
+                else // if we have not moved down to a null   
+                {
+                    myStack.Push(currentBSTnode); // save this upper node onto the top of the stack    
+                    currentBSTnode = currentBSTnode.LeftNode;  // and take a step down the left side           
+                }
+            }
+            return isbnList;
         }
     }
 }
